@@ -11,7 +11,7 @@ window.addEventListener('load', () => {
 submitEntryBtn.addEventListener('click', (e) => {
   e.preventDefault();
 
-  saveEntry(labelElem.value, parseInt(amountElem.value));
+  saveEntry(labelElem.value, parseInt(amountElem.value, 10));
   renderList();
 
   labelElem.value = "";
@@ -109,7 +109,7 @@ function modifyElem(elem, amount) {
 
   const data = JSON.parse(localStorage.getItem('items'));
 
-  let dataValue = parseInt(data.find(x => x.id == dataId).value);
+  let dataValue = parseInt(data.find(x => x.id == dataId).value, 10);
   console.log(dataValue);
 
   dataValue += amount;
