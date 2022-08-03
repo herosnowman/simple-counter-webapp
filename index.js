@@ -35,7 +35,7 @@ function saveEntry(label, value) {
     data = JSON.parse(items);
   }
   
-  data.push({ id: data.length, label: label, value: value });
+  data.push({ id: data.length, label: label, value: value ? value : 0 });
   localStorage.setItem('items', JSON.stringify(data));
 }
 
