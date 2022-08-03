@@ -1,0 +1,91 @@
+h1 {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+
+}
+
+.additem {
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+}
+
+#label,
+#amount,
+#submitentry {
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+}
+
+#label,
+#amount {
+  padding: 0.5rem;
+  border: 1px solid #000000;
+}
+
+#submitentry {
+  padding: 1rem 2rem;
+  background-color: #42aaaa;
+  color: white;
+}
+
+#clearall {
+  width: 100%;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  padding: 1rem 2rem;
+  background-color: #c24c4c;
+  color: white;
+}
+
+#items {
+  list-style: none;
+  margin: 0;
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+#items .listitem {
+  display: flex;
+}
+
+#items .listitem button {
+  width: 2rem;
+  border: none;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.listitem button.dec {
+  background-color: #c24c4c;
+}
+
+.listitem button.inc {
+  background-color: #008000;
+}
+ 
+#items .item {
+  display: flex;
+  flex-grow: 1;
+  justify-content: space-between;
+  padding: 0.5rem;
+  border: 1px solid #000000;
+}
+
+.item .id {
+  display: none;
+}
+
+.item .label {
+
+}
+
+.item .value {
+  
+}
