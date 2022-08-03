@@ -109,7 +109,7 @@ function modifyElem(elem, amount) {
 
   const data = JSON.parse(localStorage.getItem('items'));
 
-  let dataValue = data.find(x => x.id == dataId).value;
+  let dataValue = parseInt(data.find(x => x.id == dataId).value);
 
   dataValue += amount;
 
