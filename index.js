@@ -110,9 +110,8 @@ function modifyElem(elem, amount) {
   const data = JSON.parse(localStorage.getItem('items'));
 
   let dataValue = parseInt(data.find(x => x.id == dataId).value, 10);
-  console.log(dataValue);
 
-  dataValue += amount;
+  dataValue = +dataValue + +amount;
 
   data[data.find(x => x.id == dataId).id].value = dataValue;
   localStorage.setItem('items', JSON.stringify(data));
