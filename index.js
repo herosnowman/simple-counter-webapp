@@ -4,6 +4,10 @@ const submitEntryBtn = document.querySelector('#submitentry');
 const clearAllBtn = document.querySelector('#clearall');
 const itemsList = document.querySelector('#items');
 
+window.addEventListener('load', () => {
+  registerSW();
+});
+
 submitEntryBtn.addEventListener('click', (e) => {
   e.preventDefault();
 
@@ -116,3 +120,14 @@ function modifyElem(elem, amount) {
 }
 
 renderList();
+
+async function registerSW() {
+  if ('serviceWorker' in navigator) {
+    try {
+      await navigator.serviceWorker.register('./sw.js');
+      console.log('register sw');
+    } catch(e) {
+      console.log('SW registration failed');
+    }
+  }
+}
