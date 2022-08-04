@@ -4,6 +4,10 @@ const submitEntryBtn = document.querySelector('#submitentry');
 const clearAllBtn = document.querySelector('#clearall');
 const itemsList = document.querySelector('#items');
 
+const uploadForm = document.querySelector('#upload');
+const uploadFormFile = document.querySelector('#file'); 
+const downloadFileBtn = document.querySelector('#downloadbackup');
+
 window.addEventListener('load', () => {
   registerSW();
 });
@@ -106,6 +110,56 @@ function modifyElem(elem, amount) {
 
   renderList();
 }
+
+function downloadObjectAsJson(jsonStr, exportName){
+  var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(jsonStr);
+  var downloadAnchorNode = document.createElement('a');
+  downloadAnchorNode.setAttribute("href",     dataStr);
+  downloadAnchorNode.setAttribute("download", exportName + ".json");
+  document.body.appendChild(downloadAnchorNode); // required for firefox
+  downloadAnchorNode.click();
+  downloadAnchorNode.remove();
+}
+
+downloadFileBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+
+  downloadObjectAsJson(localStorage.getItem('items'), 'simple-counter-app-backup');
+});
+
+uploadFormFile.onchange = function(e) {
+  // uploadForm.submit();
+  if (!uploadFormFile.value.length) return;
+  
+  let reader = new FileReader();
+
+  reader.onload = (e) => {
+    const str = e.target.result;
+    localStorage.setItem('items', str);
+    renderList();
+    uploadFormFile.value = null;
+  };
+
+  reader.readAsText(uploadFormFile.files[0]);
+}
+
+uploadForm.addEventListener('submit', (e) => {
+  console.log('yeet');
+
+  e.preventDefault();
+
+  if (!uploadFormFile.value.length) return;
+  
+  let reader = new FileReader();
+
+  reader.onload = (e) => {
+    const str = e.target.result;
+    localStorage.setItem('items', str);
+    renderList();
+  };
+
+  reader.readAsText(file.files[0]);
+});
 
 renderList();
 
