@@ -37,7 +37,7 @@ function saveEntry(label, value) {
   if (items)
     data = JSON.parse(items);
   
-  data.push({ id: data.length, label: label, value: value ? value : 0 });
+  data.push({ id: data.length > 0 ? data[data.length - 1].id + 1 : 0, label: label, value: value ? value : 0 });
   localStorage.setItem('items', JSON.stringify(data));
 }
 
@@ -58,6 +58,7 @@ function renderList() {
 
       var listItem = createElem('li', '', 'listitem');
       listItem.appendChild(entry);
+      listItem.appendChild(createElem('button', 'del', 'del'));
       listItem.appendChild(createElem('button', '-', 'dec'));
       listItem.appendChild(createElem('button', '+', 'inc'));
       itemsList.appendChild(listItem);
@@ -92,6 +93,11 @@ function addEventListeners() {
       e.preventDefault();
       modifyElem(elem, 1);
     });
+
+    elem.querySelector('.del').addEventListener('click', (e) => {
+      e.preventDefault();
+      modifyElem(elem, 'delete');
+    });
   });
 }
 
@@ -99,13 +105,18 @@ function modifyElem(elem, amount) {
   const idEl = elem.querySelector('.id');
   const dataId = idEl.innerText;
 
-  const data = JSON.parse(localStorage.getItem('items'));
+  let data = JSON.parse(localStorage.getItem('items'));
 
-  let dataValue = parseInt(data.find(x => x.id == dataId).value, 10);
+  if (amount === 'delete') {
+    data = data.filter(elem => elem.id != dataId);
+  } else {
+    let dataValue = parseInt(data.find(x => x.id == dataId).value, 10);
 
-  dataValue = +dataValue + +amount;
+    dataValue = +dataValue + +amount;
+  
+    data[data.find(x => x.id == dataId).id].value = dataValue;
+  }
 
-  data[data.find(x => x.id == dataId).id].value = dataValue;
   localStorage.setItem('items', JSON.stringify(data));
 
   renderList();
