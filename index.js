@@ -28,12 +28,10 @@ clearAllBtn.addEventListener('click', (e) => {
 
 function saveEntry(label, value) {
   const items = localStorage.getItem('items');
-
   let data = [];
 
-  if (items) {
+  if (items)
     data = JSON.parse(items);
-  }
   
   data.push({ id: data.length, label: label, value: value ? value : 0 });
   localStorage.setItem('items', JSON.stringify(data));
@@ -49,42 +47,32 @@ function renderList() {
 
     data.forEach(({id, label, value}) => {
       var entry = document.createElement('div');
-
-      var idEl = document.createElement('div');
-      idEl.classList.add('id');
-      idEl.appendChild(document.createTextNode(id));
-
-      var labelEl = document.createElement('div');
-      labelEl.classList.add('label');
-      labelEl.appendChild(document.createTextNode(label));
-
-      var valueEl = document.createElement('div');
-      valueEl.classList.add('value');
-      valueEl.appendChild(document.createTextNode(value));
-
-      var decBtn = document.createElement('button');
-      decBtn.appendChild(document.createTextNode('-'));
-      decBtn.classList.add('dec');
-
-      var incBtn = document.createElement('button');
-      incBtn.appendChild(document.createTextNode('+'));
-      incBtn.classList.add('inc');
-
-      entry.appendChild(idEl);
-      entry.appendChild(labelEl);
-      entry.appendChild(valueEl);
+      entry.appendChild(createElem('div', id, 'id'));
+      entry.appendChild(createElem('div', label, 'label'));
+      entry.appendChild(createElem('div', value, 'value'));
       entry.classList.add('item');
 
-      var listItem = document.createElement('li');
+      var listItem = createElem('li', '', 'listitem');
       listItem.appendChild(entry);
-      listItem.appendChild(decBtn);
-      listItem.appendChild(incBtn);
-      listItem.classList.add('listitem');
+      listItem.appendChild(createElem('button', '-', 'dec'));
+      listItem.appendChild(createElem('button', '+', 'inc'));
       itemsList.appendChild(listItem);
     });
   }
 
   addEventListeners();
+}
+
+function createElem(type, content, classes = "") {
+  var element = document.createElement(type);
+
+  if (content !== "")
+    element.appendChild(document.createTextNode(content));
+
+  if (classes !== "")
+    element.classList.add(classes);
+
+  return element;
 }
 
 function addEventListeners() {
