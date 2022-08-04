@@ -1,10 +1,9 @@
 const cacheName = 'counterapp-v1.1';
 const staticAssets = [
-  './images',
-  './index.html',
-  './style.css',
-  './index.js',
-  './sw.js'
+  '/index.html',
+  '/style.css',
+  '/index.js',
+  '/sw.js'
 ];
 
 self.addEventListener('install', async e => {
