@@ -1,12 +1,16 @@
 const labelElem = document.querySelector('#label');
 const amountElem = document.querySelector('#amount');
 const submitEntryBtn = document.querySelector('#submitentry');
-const clearAllBtn = document.querySelector('#clearall');
 const itemsList = document.querySelector('#items');
 
 const uploadForm = document.querySelector('#upload');
 const uploadFormFile = document.querySelector('#file'); 
 const downloadFileBtn = document.querySelector('#downloadbackup');
+
+const clearAllBtn = document.querySelector('#clearall');
+const confirmClearBtn = document.querySelector('#confirmclear');
+const closeModalBtn = document.querySelector('#closemodal');
+const modalElem = document.querySelector('#modal');
 
 window.addEventListener('load', () => {
   registerSW();
@@ -25,9 +29,23 @@ submitEntryBtn.addEventListener('click', (e) => {
 clearAllBtn.addEventListener('click', (e) => {
   e.preventDefault();
 
+  modalElem.classList.add('show');
+});
+
+confirmClearBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+
   localStorage.removeItem('items');
 
   renderList();
+
+  modalElem.classList.remove('show');
+});
+
+closeModalBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+
+  modalElem.classList.remove('show');
 });
 
 function saveEntry(label, value) {

@@ -1,4 +1,4 @@
-const cacheName = 'counterapp-v1.3';
+const cacheName = 'counterapp-v1.4';
 const staticAssets = [
   './',
   './index.html',
@@ -22,7 +22,6 @@ self.addEventListener('activate', e => {
           return caches.delete(key);
         }
       }))
-
     })
   );
 
