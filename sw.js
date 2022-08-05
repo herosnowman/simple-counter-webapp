@@ -1,4 +1,4 @@
-const cacheName = 'counterapp-v1.2';
+const cacheName = 'counterapp-v1.3';
 const staticAssets = [
   './',
   './index.html',
@@ -13,7 +13,20 @@ self.addEventListener('install', async e => {
 });
 
 self.addEventListener('activate', e => {
-  self.clients.claim();
+  e.waitUntil(
+    caches.keys()
+    .then(keyList => {
+      return Promise.all(keyList.map(key => {
+        if (key !== cacheName) {
+          console.warn('Deleting old Cached File with Key', key);
+          return caches.delete(key);
+        }
+      }))
+
+    })
+  );
+
+  return self.clients.claim();
 });
 
 self.addEventListener('fetch', async e => {
