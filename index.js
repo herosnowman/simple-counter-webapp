@@ -102,12 +102,8 @@ function addEventListeners() {
 }
 
 function modifyElem(elem, amount) {
-  console.log('modifyelem');
   const idEl = elem.querySelector('.id');
   const dataId = idEl.innerText;
-  
-  console.log('idEl', idEl);
-  console.log('dataId', dataId);
 
   let data = JSON.parse(localStorage.getItem('items'));
 
@@ -116,13 +112,9 @@ function modifyElem(elem, amount) {
   } else {
     let dataValue = parseInt(data.find(x => x.id.toString() === dataId).value, 10);
 
-    console.log('found data entry with value:', dataValue);
-
     dataValue = +dataValue + +amount;
-
-    console.log('after modification:', dataValue);
   
-    data[data.find(x => x.id.toString() == dataId).id].value = dataValue;
+    data[data.findIndex(x => x.id.toString() == dataId)].value = dataValue;
   }
 
   localStorage.setItem('items', JSON.stringify(data));
@@ -163,8 +155,6 @@ uploadFormFile.onchange = function(e) {
 }
 
 uploadForm.addEventListener('submit', (e) => {
-  console.log('yeet');
-
   e.preventDefault();
 
   if (!uploadFormFile.value.length) return;
