@@ -37,7 +37,7 @@ function saveEntry(label, value) {
   if (items)
     data = JSON.parse(items);
   
-  data.push({ id: data.length > 0 ? data[data.length - 1].id + 1 : 0, label: label, value: value ? value : 0 });
+  data.push({ id: data.length > 0 ? parseInt(data[data.length - 1].id) + 1 : 0, label: label, value: value ? value : 0 });
   localStorage.setItem('items', JSON.stringify(data));
 }
 
@@ -108,13 +108,13 @@ function modifyElem(elem, amount) {
   let data = JSON.parse(localStorage.getItem('items'));
 
   if (amount === 'delete') {
-    data = data.filter(elem => elem.id != dataId);
+    data = data.filter(elem => elem.id.toString() !== dataId);
   } else {
-    let dataValue = parseInt(data.find(x => x.id == dataId).value, 10);
+    let dataValue = parseInt(data.find(x => x.id.toString() === dataId).value, 10);
 
     dataValue = +dataValue + +amount;
   
-    data[data.find(x => x.id == dataId).id].value = dataValue;
+    data[data.find(x => x.id.toString() == dataId).id].value = dataValue;
   }
 
   localStorage.setItem('items', JSON.stringify(data));
