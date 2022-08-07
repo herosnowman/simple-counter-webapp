@@ -48,6 +48,13 @@ closeModalBtn.addEventListener('click', (e) => {
   modalElem.classList.remove('show');
 });
 
+function getTimestamp () {
+  const pad = (n,s=2) => (`${new Array(s).fill(0)}${n}`).slice(-s);
+  const d = new Date();
+  
+  return `${pad(d.getFullYear(),4)}-${pad(d.getMonth()+1)}-${pad(d.getDate())}--${pad(d.getHours())}-${pad(d.getMinutes())}-${pad(d.getSeconds())}`;
+}
+
 function saveEntry(label, value) {
   const items = localStorage.getItem('items');
   let data = [];
@@ -153,7 +160,7 @@ function downloadObjectAsJson(jsonStr, exportName){
 downloadFileBtn.addEventListener('click', (e) => {
   e.preventDefault();
 
-  downloadObjectAsJson(localStorage.getItem('items'), 'simple-counter-app-backup');
+  downloadObjectAsJson(localStorage.getItem('items'), `simple-counter-app-backup_${getTimestamp()}`);
 });
 
 uploadFormFile.onchange = function(e) {

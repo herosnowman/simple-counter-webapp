@@ -1,4 +1,4 @@
-const cacheName = 'counterapp-v0.2.1';
+const cacheName = 'counterapp-v0.2.2';
 const staticAssets = [
   './',
   './index.html',
