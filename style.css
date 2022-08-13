@@ -168,10 +168,6 @@ button:active,
   display: block;
 }
 
-#items li.hint {
-  background: #feffb4;
-}
-
 #items li.active {
-  background: #c3ffa1;
+  background: #f1f37a;
 }

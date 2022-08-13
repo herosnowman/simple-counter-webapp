@@ -1,9 +1,10 @@
-const cacheName = 'counterapp-v0.2.4';
+const cacheName = 'counterapp-v0.2.5';
 const staticAssets = [
   './',
   './index.html',
   './style.css',
-  './index.js'
+  './index.js',
+  './Sortable.min.js'
 ];
 
 self.addEventListener('install', async e => {

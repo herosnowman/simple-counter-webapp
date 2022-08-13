@@ -16,73 +16,6 @@ window.addEventListener('load', () => {
   registerSW();
 });
 
-function handleDrag(target) {
-  let items = target.getElementsByTagName("li"),
-    current = null;
-
-  for (let i of items) {
-    i.draggable = true;
-
-    i.ondragstart = (e) => {
-      current = i;
-      for (let it of items) {
-        if (it != current) {
-          it.classList.add("hint");
-        }
-      }
-    };
-
-    i.ondragenter = (e) => {
-      if (i != current) {
-        i.classList.add("active");
-      }
-    };
-
-    i.ondragleave = (e) => {
-      const isInsideListItem = e.relatedTarget.closest("li.listitem");
-      if (!Boolean(isInsideListItem)) {
-        i.classList.remove("active");
-      }
-    };
-
-    i.ondragend = () => {
-      for (let it of items) {
-        it.classList.remove("hint");
-        it.classList.remove("active");
-      }
-    };
-
-    i.ondragover = (e) => {
-      e.preventDefault();
-    };
-
-    i.ondrop = (e) => {
-      e.preventDefault();
-      if (i != current) {
-        let currentpos = 0,
-          droppedpos = 0;
-        for (let it = 0; it < items.length; it++) {
-          if (current == items[it]) {
-            currentpos = it;
-          }
-          if (i == items[it]) {
-            droppedpos = it;
-          }
-        }
-
-        if (currentpos < droppedpos) {
-          i.parentNode.insertBefore(current, i.nextSibling);
-        } else {
-          i.parentNode.insertBefore(current, i);
-        }
-
-        switchItemPos(currentpos, droppedpos);
-        renderList();
-      }
-    };
-  }
-}
-
 function switchItemPos(oldIndex, newIndex) {
   let data = JSON.parse(localStorage.getItem('items'));
 
@@ -230,7 +163,12 @@ function addEventListeners() {
     });
   });
 
-  handleDrag(itemsList);
+  Sortable.create(itemsList, { 
+    delay: 200,
+    chosenClass: 'active',
+    onEnd: (e) => {
+    switchItemPos(e.oldIndex, e.newIndex);
+  }});
 }
 
 function modifyElem(elem, amount) {
