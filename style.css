@@ -55,6 +55,7 @@ body {
 
 #items .listitem {
   display: flex;
+  user-select: none;
 }
 
 #items .listitem button {
@@ -85,7 +86,7 @@ button:active,
 .listitem button.inc {
   background-color: #008000;
 }
- 
+
 #items .item {
   display: flex;
   flex-grow: 1;
@@ -136,7 +137,7 @@ button:active,
   width: 80%;
   min-height: 50px;
   background-color: white;
-  box-shadow: 5px 3px 10px -1px rgba(0,0,0,0.49);
+  box-shadow: 5px 3px 10px -1px rgba(0, 0, 0, 0.49);
 }
 
 #modal {
@@ -159,10 +160,18 @@ button:active,
   font-weight: bold;
 }
 
-#confirmclear { 
+#confirmclear {
   background-color: #c24c4c;
 }
 
 #modal.show {
   display: block;
+}
+
+#items li.hint {
+  background: #feffb4;
+}
+
+#items li.active {
+  background: #c3ffa1;
 }

@@ -4,7 +4,7 @@ const submitEntryBtn = document.querySelector('#submitentry');
 const itemsList = document.querySelector('#items');
 
 const uploadForm = document.querySelector('#upload');
-const uploadFormFile = document.querySelector('#file'); 
+const uploadFormFile = document.querySelector('#file');
 const downloadFileBtn = document.querySelector('#downloadbackup');
 
 const clearAllBtn = document.querySelector('#clearall');
@@ -15,6 +15,85 @@ const modalElem = document.querySelector('#modal');
 window.addEventListener('load', () => {
   registerSW();
 });
+
+function handleDrag(target) {
+  let items = target.getElementsByTagName("li"),
+    current = null;
+
+  for (let i of items) {
+    i.draggable = true;
+
+    i.ondragstart = (e) => {
+      current = i;
+      for (let it of items) {
+        if (it != current) {
+          it.classList.add("hint");
+        }
+      }
+    };
+
+    i.ondragenter = (e) => {
+      if (i != current) {
+        i.classList.add("active");
+      }
+    };
+
+    i.ondragleave = (e) => {
+      const isInsideListItem = e.relatedTarget.closest("li.listitem");
+      if (!Boolean(isInsideListItem)) {
+        i.classList.remove("active");
+      }
+    };
+
+    i.ondragend = () => {
+      for (let it of items) {
+        it.classList.remove("hint");
+        it.classList.remove("active");
+      }
+    };
+
+    i.ondragover = (e) => {
+      e.preventDefault();
+    };
+
+    i.ondrop = (e) => {
+      e.preventDefault();
+      if (i != current) {
+        let currentpos = 0,
+          droppedpos = 0;
+        for (let it = 0; it < items.length; it++) {
+          if (current == items[it]) {
+            currentpos = it;
+          }
+          if (i == items[it]) {
+            droppedpos = it;
+          }
+        }
+
+        if (currentpos < droppedpos) {
+          i.parentNode.insertBefore(current, i.nextSibling);
+        } else {
+          i.parentNode.insertBefore(current, i);
+        }
+
+        switchItemPos(currentpos, droppedpos);
+        renderList();
+      }
+    };
+  }
+}
+
+function switchItemPos(oldIndex, newIndex) {
+  let data = JSON.parse(localStorage.getItem('items'));
+
+  const item1 = data[oldIndex],
+    item2 = data[newIndex];
+
+  data[newIndex] = item1;
+  data[oldIndex] = item2;
+
+  localStorage.setItem('items', JSON.stringify(data));
+}
 
 submitEntryBtn.addEventListener('click', (e) => {
   e.preventDefault();
@@ -48,10 +127,10 @@ closeModalBtn.addEventListener('click', (e) => {
   modalElem.classList.remove('show');
 });
 
-function getTimestamp () {
-  const pad = (n,s=2) => (`${new Array(s).fill(0)}${n}`).slice(-s);
+function getTimestamp() {
+  const pad = (n, s = 2) => (`${new Array(s).fill(0)}${n}`).slice(-s);
   const d = new Date();
-  
+
   return `${pad(d.getFullYear(),4)}-${pad(d.getMonth()+1)}-${pad(d.getDate())}--${pad(d.getHours())}-${pad(d.getMinutes())}-${pad(d.getSeconds())}`;
 }
 
@@ -61,25 +140,30 @@ function saveNewEntry(label, value) {
 
   if (items)
     data = JSON.parse(items);
-  
-  data.push({ id: generateUUID(), createdAt: new Date().toJSON(), label: label, value: value ? value : 0 });
+
+  data.push({
+    id: generateUUID(),
+    createdAt: new Date().toJSON(),
+    label: label,
+    value: value ? value : 0
+  });
   localStorage.setItem('items', JSON.stringify(data));
 }
 
 // https://stackoverflow.com/a/8809472
 function generateUUID() { // Public Domain/MIT
-  var d = new Date().getTime();//Timestamp
-  var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now()*1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      var r = Math.random() * 16;//random number between 0 and 16
-      if(d > 0){//Use timestamp until depleted
-          r = (d + r)%16 | 0;
-          d = Math.floor(d/16);
-      } else {//Use microseconds since page-load if supported
-          r = (d2 + r)%16 | 0;
-          d2 = Math.floor(d2/16);
-      }
-      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  var d = new Date().getTime(); //Timestamp
+  var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now() * 1000)) || 0; //Time in microseconds since page-load or 0 if unsupported
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = Math.random() * 16; //random number between 0 and 16
+    if (d > 0) { //Use timestamp until depleted
+      r = (d + r) % 16 | 0;
+      d = Math.floor(d / 16);
+    } else { //Use microseconds since page-load if supported
+      r = (d2 + r) % 16 | 0;
+      d2 = Math.floor(d2 / 16);
+    }
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
   });
 }
 
@@ -91,7 +175,11 @@ function renderList() {
   if (items) {
     const data = JSON.parse(items);
 
-    data.forEach(({id, label, value}) => {
+    data.forEach(({
+      id,
+      label,
+      value
+    }) => {
       var entry = document.createElement('div');
       entry.appendChild(createElem('div', id, 'id'));
       entry.appendChild(createElem('div', label, 'label'));
@@ -141,6 +229,8 @@ function addEventListeners() {
       modifyElem(elem, 'delete');
     });
   });
+
+  handleDrag(itemsList);
 }
 
 function modifyElem(elem, amount) {
@@ -155,7 +245,7 @@ function modifyElem(elem, amount) {
     let dataValue = parseInt(data.find(x => x.id.toString() === dataId).value, 10);
 
     dataValue = +dataValue + +amount;
-  
+
     data[data.findIndex(x => x.id.toString() == dataId)].value = dataValue;
   }
 
@@ -164,10 +254,10 @@ function modifyElem(elem, amount) {
   renderList();
 }
 
-function downloadObjectAsJson(jsonStr, exportName){
+function downloadObjectAsJson(jsonStr, exportName) {
   var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(jsonStr);
   var downloadAnchorNode = document.createElement('a');
-  downloadAnchorNode.setAttribute("href",     dataStr);
+  downloadAnchorNode.setAttribute("href", dataStr);
   downloadAnchorNode.setAttribute("download", exportName + ".json");
   document.body.appendChild(downloadAnchorNode); // required for firefox
   downloadAnchorNode.click();
@@ -180,10 +270,10 @@ downloadFileBtn.addEventListener('click', (e) => {
   downloadObjectAsJson(localStorage.getItem('items'), `simple-counter-app-backup_${getTimestamp()}`);
 });
 
-uploadFormFile.onchange = function(e) {
+uploadFormFile.onchange = function (e) {
   // uploadForm.submit();
   if (!uploadFormFile.value.length) return;
-  
+
   let reader = new FileReader();
 
   reader.onload = (e) => {
@@ -200,7 +290,7 @@ uploadForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
   if (!uploadFormFile.value.length) return;
-  
+
   let reader = new FileReader();
 
   reader.onload = (e) => {
@@ -219,7 +309,7 @@ async function registerSW() {
     try {
       await navigator.serviceWorker.register('./sw.js');
       console.log('register sw');
-    } catch(e) {
+    } catch (e) {
       console.log('SW registration failed');
     }
   }
